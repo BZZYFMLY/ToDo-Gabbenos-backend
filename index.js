@@ -29,10 +29,11 @@ const getAllTodos = async () => {
 
 app.post("/addtodo", async (req, res) => {
   console.log("Add todos")
+  console.log("req.body", req.body.data);
   await db.push(
     "/",
     {
-      todos: req.body,
+      todos: req.body.data,
     }, false);
     res.send("Todo added");
   })
