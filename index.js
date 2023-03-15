@@ -23,19 +23,15 @@ app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
-  console.log("Hello World!");
   res.send("<h1>ToDo backend!</h1>");
 })
 
 const getAllTodos = async () => {
   const todos = await db.getData("/");
-  console.log(todos);
   return todos;
 }
 
 app.post(`/${addTodoEndpoint}`, async (req, res) => {
-  console.log("Add todos")
-  console.log("req.body", req.body.data);
   await db.push(
     "/",
     {
@@ -46,7 +42,6 @@ app.post(`/${addTodoEndpoint}`, async (req, res) => {
 })
 
 app.post(`/${clearAllTodosEndpoint}`, async (req, res) => {
-  console.log("Clear all todos");
   await db.push(
     "/",
     {
@@ -58,10 +53,11 @@ app.post(`/${clearAllTodosEndpoint}`, async (req, res) => {
 });
 
 app.post(`/${deleteTodoEndpoint}`, async (req, res) => {
-  console.log("Delete todo");
-  console.log("req.body", req.body.data);
   const {todos} = await getAllTodos();
+  console.log(req.body.data.id)
+  console.log(todos.length)
   const newTodos = todos.filter((todo) => todo.id !== req.body.data.id);
+  console.log(newTodos.length)
   await db.push(
     "/",
     {
@@ -73,34 +69,33 @@ app.post(`/${deleteTodoEndpoint}`, async (req, res) => {
 });
 
 app.post(`/${updateTodoEndpoint}`, async (req, res) => {
-  console.log("Update todo");
-
   const {todos} = await getAllTodos();
+  const newTodo = req.body.data;
+  console.log(newTodo)
+
   const newTodos = todos.map((todo) => {
-    if (todo.id === req.body.data.id) {
-      return req.body.data;
+    if (todo.id === newTodo.id) {
+      return newTodo;
     }
     return todo;
   });
+
   await db.push(
     "/",
     {
       todos: newTodos,
     },
-    false
+    true
   );
-  res.send("Todo updated");
+  res.send(newTodos);
 });
 
 app.post(`/${getTodosEndpoint}`, async (req, res) => {
-  console.log("Getting all todos")
   const {todos} = await getAllTodos();
-  console.log(todos);
   res.send(todos);
 })
 
 app.listen(8080, () => {
-  console.log("Server started on port 8080");
 })
 
 
