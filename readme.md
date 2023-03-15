@@ -1,5 +1,5 @@
 # This is a ToDo app JSONDB Rest API
-The Api runs on (fly.dev))[https://todo-gabbenos.fly.dev/]
+The Api runs on [fly.dev](https://todo-gabbenos.fly.dev/)
 
 ## Endpoints
 / - GET - retunrs wllcome message
@@ -18,6 +18,6 @@ The Api runs on (fly.dev))[https://todo-gabbenos.fly.dev/]
 1. Clone the repo
 2. fly launch --now
 
-(First install the fly.io CLI. pwershell on windows or bash on linux or mac.)[https://fly.io/docs/hands-on/install-flyctl/]
-(An sign in CLI and login with `flyctl auth login`)[https://fly.io/docs/hands-on/sign-in/]
+[First install the fly.io CLI. pwershell on windows or bash on linux or mac.](https://fly.io/docs/hands-on/install-flyctl/)
+[And sign in CLI and login with `flyctl auth login`](https://fly.io/docs/hands-on/sign-in/)
 
