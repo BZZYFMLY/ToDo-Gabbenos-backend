@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 
 const getAllTodos = async () => {
   const todos = await db.getData("/");
-  // console.log(todos);
+  console.log(todos);
   return todos;
 }
 
@@ -39,9 +39,10 @@ app.post(`/${addTodoEndpoint}`, async (req, res) => {
   await db.push(
     "/",
     {
-      todos: req.body.data,
+      todos: [req.body.data],
     }, false);
-    res.send("Todo added");
+    const {todos} = await getAllTodos();
+    res.send(todos);
 })
 
 app.post(`/${clearAllTodosEndpoint}`, async (req, res) => {
@@ -66,9 +67,9 @@ app.post(`/${deleteTodoEndpoint}`, async (req, res) => {
     {
       todos: newTodos,
     },
-    false
+    true
   );
-  res.send("Todo deleted");
+  res.send(newTodos);
 });
 
 app.post(`/${updateTodoEndpoint}`, async (req, res) => {
