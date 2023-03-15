@@ -2,7 +2,7 @@
 The Api runs on [fly.dev](https://todo-gabbenos.fly.dev/)
 
 ## Endpoints
-/ - GET - returns wellcome message
+/ - GET - retunrs wellcome message
 
 /todos - POST - returns all todos
 
