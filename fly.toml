@@ -1,6 +1,6 @@
-# fly.toml file generated for todo-gabbenos on 2023-03-15T09:52:06+01:00
+# fly.toml file generated for todo-gabbenos-api on 2023-03-15T14:16:05+01:00
 
-app = "todo-gabbenos"
+app = "todo-gabbenos-api"
 kill_signal = "SIGINT"
 kill_timeout = 5
 primary_region = "otp"
