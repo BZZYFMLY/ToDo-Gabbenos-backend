@@ -5,6 +5,12 @@ import {JsonDB, Config} from "node-json-db";
 
 const db = new JsonDB(new Config("./db/tododb.json", true, false, "/"));
 
+const getTodosEndpoint = "gettodos";
+const addTodoEndpoint = "addtodo";
+const clearAllTodosEndpoint = "clearalltodos";
+const deleteTodoEndpoint = "deletetodo";
+const updateTodoEndpoint = "updatetodo";
+
 // allow cors for all origins
 const corsOptions = {
   origin: "*",
@@ -27,7 +33,7 @@ const getAllTodos = async () => {
   return todos;
 }
 
-app.post("/addtodo", async (req, res) => {
+app.post(`/${addTodoEndpoint}`, async (req, res) => {
   console.log("Add todos")
   console.log("req.body", req.body.data);
   await db.push(
@@ -36,14 +42,59 @@ app.post("/addtodo", async (req, res) => {
       todos: req.body.data,
     }, false);
     res.send("Todo added");
-  })
+})
 
+app.post(`/${clearAllTodosEndpoint}`, async (req, res) => {
+  console.log("Clear all todos");
+  await db.push(
+    "/",
+    {
+      todos: [],
+    },
+    false
+  );
+  res.send("All todos cleared");
+});
 
+app.post(`/${deleteTodoEndpoint}`, async (req, res) => {
+  console.log("Delete todo");
+  console.log("req.body", req.body.data);
+  const {todos} = await getAllTodos();
+  const newTodos = todos.filter((todo) => todo.id !== req.body.data.id);
+  await db.push(
+    "/",
+    {
+      todos: newTodos,
+    },
+    false
+  );
+  res.send("Todo deleted");
+});
 
-  app.post("/gettodos", async (req, res) => {
-    console.log("Getting all todos")
-    const {todos} = await getAllTodos();
-    console.log(todos);
+app.post(`/${updateTodoEndpoint}`, async (req, res) => {
+  console.log("Update todo");
+
+  const {todos} = await getAllTodos();
+  const newTodos = todos.map((todo) => {
+    if (todo.id === req.body.data.id) {
+      return req.body.data;
+    }
+    return todo;
+  });
+  await db.push(
+    "/",
+    {
+      todos: newTodos,
+    },
+    false
+  );
+  res.send("Todo updated");
+});
+
+app.post(`/${getTodosEndpoint}`, async (req, res) => {
+  console.log("Getting all todos")
+  const {todos} = await getAllTodos();
+  console.log(todos);
   res.send(todos);
 })
 
