@@ -1,5 +1,5 @@
 # This is a ToDo app JSONDB Rest API
-The Api runs on [fly.dev](https://todo-gabbenos.fly.dev/)
+The Api runs on [fly.dev](https://todo-gabbenos-api.fly.dev/)
 
 ## Endpoints
 / - GET - retunrs wellcome message
