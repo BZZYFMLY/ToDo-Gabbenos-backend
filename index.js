@@ -72,10 +72,10 @@ const addTodo = async (todo) => {
 app.post("/addtodo", async (req, res) => {
   const newTodo = req.body;
 
-  // if (!validateTodo(newTodo)) {
-  //   res.status(400).send({msg: "Invalid todo"});
-  //   return;
-  // }
+  if (!validateTodo(newTodo)) {
+    res.status(400).send({msg: "Invalid todo"});
+    return;
+  }
 
   addTodo(newTodo);
 
@@ -96,6 +96,20 @@ app.post("/deletetodo", async (req, res) => {
 
   const newTodos = todos.filter((todo) => todo.id !== id);
   console.log(newTodos);
+
+  await db.push("/todos", newTodos, true);
+
+  res.status(200).send(newTodos);
+});
+
+app.post("/updatetodo", async (req, res) => {
+  const newTodo = req.body;
+
+  const todos = await getAllTodos();
+
+  const newTodos = todos.map((todo) =>
+    todo.id === newTodo.id ? newTodo : todo
+  );
 
   await db.push("/todos", newTodos, true);
 
