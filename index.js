@@ -17,38 +17,90 @@ app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
-  console.log("Hello World!");
-  res.send("<h1>ToDo backend!</h1>");
-})
+  res.send(
+    `<h1>ToDo backend!</h1>
+    <p>Valid endpoint os the api are:</p>
+      <ul>
+        <li>/gettodos GET request</li>
+        <li>/addtodo POST request request body with following format: {id, content, date, done}</li>
+      </ul>`
+  );
+});
 
 const getAllTodos = async () => {
-  const todos = await db.getData("/");
-  // console.log(todos);
+  let todos = [];
+  let msg;
+  try {
+    todos = await db.getData("/todos");
+    msg = "ok";
+  } catch (error) {
+    msg = "error";
+    res.status(500).send({msg: "Error getting todos"});
+  }
   return todos;
-}
+};
+
+const validateTodo = (todo) => {
+  if (todo.content === undefined || todo.content === "") {
+    return false;
+  }
+  if (todo.date === undefined || todo.date === "") {
+    return false;
+  } else {
+    const date = new Date(todo.date);
+    if (date === "Invalid Date") {
+      return false;
+    }
+  }
+  if (todo.done === undefined || todo.priority === "") {
+    return false;
+  } else {
+    if (typeof todo.done !== "boolean") {
+      return false;
+    }
+  }
+  if (todo.id === undefined || todo.dueDate === "") {
+    return false;
+  }
+  return true;
+};
+
+const addTodo = async (todo) => {
+  await db.push("/todos", [todo], false);
+};
 
 app.post("/addtodo", async (req, res) => {
-  console.log("Add todos")
-  console.log("req.body", req.body.data);
-  await db.push(
-    "/",
-    {
-      todos: req.body.data,
-    }, false);
-    res.send("Todo added");
-  })
+  const newTodo = req.body;
 
+  if (!validateTodo(newTodo)) {
+    res.status(400).send({msg: "Invalid todo"});
+    return;
+  }
 
+  addTodo(newTodo);
 
-  app.post("/gettodos", async (req, res) => {
-    console.log("Getting all todos")
-    const {todos} = await getAllTodos();
-    console.log(todos);
-  res.send(todos);
-})
+  const todos = await getAllTodos();
 
-app.listen(8080, () => {
-  console.log("Server started on port 8080");
-})
+  res.status(200).send(newTodos);
+});
+
+app.get("/gettodos", async (req, res) => {
+  const todos = await getAllTodos();
+  res.status(200).send(todos);
+});
+
+app.post("/deletetodo", async (req, res) => {
+  const {id} = req.body;
+  console.log(id);
+  const todos = await getAllTodos();
+
+  const newTodos = todos.filter((todo) => todo.id !== id);
+
+  await db.push("/todos", newTodos, true);
+
+  res.status(200).send(newTodos);
+});
+
+app.listen(8080, () => {});
 
 
