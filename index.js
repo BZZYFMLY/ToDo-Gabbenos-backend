@@ -19,7 +19,7 @@ app.use(cors(corsOptions));
 app.get("/", (req, res) => {
   res.send(
     `<h1>ToDo backend!</h1>
-    <p>Valid endpoint os the api are:</p>
+    <p>Valid endpoint of the api are the followings:</p>
       <ul>
         <li>/gettodos GET request</li>
         <li>/addtodo POST request request body with following format: {id, content, date, done}</li>
