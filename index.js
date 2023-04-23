@@ -23,6 +23,8 @@ app.get("/", (req, res) => {
       <ul>
         <li>/gettodos GET request</li>
         <li>/addtodo POST request request body with following format: {id, content, date, done}</li>
+        <li>/updatetodo POST request request body with following format: {id, content, date, done}</li>
+        <li>/deletetodo POST request request body with following format: {id}</li>
       </ul>`
   );
 });
